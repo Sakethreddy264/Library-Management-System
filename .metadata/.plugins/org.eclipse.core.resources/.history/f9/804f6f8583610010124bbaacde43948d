@@ -1,0 +1,41 @@
+package main;
+
+import java.util.Scanner;
+
+import services.BookService;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		BookService bookService = new BookService();
+		while (true) {
+			System.out.println("LIBRARY MANAGEMENT SYSTEM");
+			System.out.println("1. Add Book.");
+			System.out.println("2. View All Books.");
+			System.out.println("3. Exit");
+			System.out.println("Enter Your Chioce");
+			int choice = sc.nextInt();
+			sc.nextLine();
+			switch (choice) {
+			case 1 -> {
+				System.out.print("Enter ID: ");
+				String id = sc.nextLine();
+				System.out.print("Enter Title: ");
+				String title = sc.nextLine();
+				System.out.print("Enter Author: ");
+				String author = sc.nextLine();
+				bookService.addBook(id, title, author);
+			}
+			case 2 -> bookService.printAllBooks();
+			case 3 -> {
+				System.out.println("Exiting...");
+				return;
+			}
+			default -> System.out.println("Invalid choice.");
+			}
+		}
+
+	}
+
+}

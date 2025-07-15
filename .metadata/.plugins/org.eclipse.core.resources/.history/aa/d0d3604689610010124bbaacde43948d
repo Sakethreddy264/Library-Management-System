@@ -1,0 +1,43 @@
+package utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import services.BookService;
+import services.UserService;
+
+public class Initializer {
+
+	public static void setupDefaults(UserService userService, BookService bookService) {
+		// Initialize users.csv if empty or missing
+		File usersFile = new File("data/users.csv");
+		if (!usersFile.exists() || usersFile.length() == 0) {
+			System.out.println("Initializing default users...");
+			userService.addUser("U001", "Arjun", "Admin");
+			userService.addUser("U002", "Kabir", "Student");
+			userService.addUser("U003", "Vijay", "Student");
+			userService.addUser("U004", "Preeti", "Student");
+		}
+
+		// Initialize books.csv if empty or missing
+		File booksFile = new File("data/books.csv");
+		if (!booksFile.exists() || booksFile.length() == 0) {
+			System.out.println("Initializing default books...");
+			bookService.addBook("B101", "Java Programming", "James Gosling");
+			bookService.addBook("B102", "Python Basics", "Guido van Rossum");
+			bookService.addBook("B103", "Operating Systems", "Galvin");
+		}
+	}
+
+	public static void wipeDataFiles() {
+		try {
+			new PrintWriter("data/users.csv").close(); // clear users
+			new PrintWriter("data/books.csv").close(); // clear books
+			System.out.println("All CSV data cleared.");
+		} catch (IOException e) {
+			System.out.println("Error clearing data files: " + e.getMessage());
+		}
+	}
+
+}

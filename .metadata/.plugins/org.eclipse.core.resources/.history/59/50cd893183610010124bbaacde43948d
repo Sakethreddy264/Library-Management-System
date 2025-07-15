@@ -1,0 +1,85 @@
+package services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import models.Book;
+import models.User;
+import utils.FileUtil;
+
+public class BorrowService {
+	private final String FILE_PATH = "data/books.csv";
+	private List<Book> books;
+
+	public BorrowService() {
+		books = new ArrayList<>();
+		loadBooks();
+	}
+
+	public void borrowBook(String bookId, User user) {
+		Book book = findBookById(bookId);
+		if (book == null) {
+			System.out.println("Book not found.");
+			return;
+		}
+		if (book.setIssued()) {
+			System.out.println("Book is already issued.");
+			return;
+		}
+		book.isIssued(true);
+		saveBooks();
+		System.out.println("Book '" + book.getTitle() + "' is issued to " + user.getName());
+	}
+
+	public void returnBook(String bookId, User user) {
+		Book book = findBookById(bookId);
+		if (book == null) {
+			System.out.println("Book not found");
+			return;
+		}
+		if (!book.isIssued()) {
+			System.out.println("Book is already available. ");
+			return;
+		}
+		book.setIssued(false);
+		saveBooks();
+		System.out.println("Book '" + book.getTitle() + "' returned by " + user.getName());
+	}
+
+	public void viewAllBooks() {
+		if (books.isEmpty()) {
+			System.out.println("No books found.");
+			return;
+		}
+		for (Book book : books) {
+			System.out.println(book.getId() + " | " + book.getTitle() + " | " + book.getAuthor() + " | Available: "
+					+ (!book.isIssued()));
+		}
+	}
+
+	private Book findBookById(String id) {
+		for (Book book : books) {
+			if (book.getId().equalsIgnoreCase(id)) {
+				return book;
+			}
+		}
+		return null;
+	}
+
+	private void loadBooks() {
+		List<String> lines = FileUtil.readFile(FILE_PATH);
+		for (String line : lines) {
+			books.add(Book.fromcsv(line));
+		}
+
+	}
+
+	private void saveBooks() {
+		List<String> lines = new ArrayList<>();
+		for (Book book : books) {
+			lines.add(book.toString());
+		}
+		FileUtil.writeFile(FILE_PATH, lines);
+	}
+
+}

@@ -1,0 +1,30 @@
+package utils;
+
+import java.io.File;
+
+import services.BookService;
+import services.UserService;
+
+public class Initializer {
+
+	public static void setupDefaults(UserService userService, BookService bookService) {
+		// Initialize users.csv if empty or missing
+		File usersFile = new File("data/users.csv");
+		if (!usersFile.exists() || usersFile.length() == 0) {
+			System.out.println("Initializing default users...");
+			userService.addUser("U001", "Arjun", "Admin");
+			userService.addUser("U002", "Kabir", "Student");
+			userService.addUser("U003", "Vijay", "Student");
+			userService.addUser("U004", "Preeti", "Student");
+		}
+
+		// Initialize books.csv if empty or missing
+		File booksFile = new File("data/books.csv");
+		if (!booksFile.exists() || booksFile.length() == 0) {
+			System.out.println("Initializing default books...");
+			bookService.addBook("B101", "Java Programming", "James Gosling");
+			bookService.addBook("B102", "Python Basics", "Guido van Rossum");
+			bookService.addBook("B103", "Operating Systems", "Galvin");
+		}
+	}
+}

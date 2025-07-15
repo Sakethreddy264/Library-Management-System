@@ -1,0 +1,111 @@
+package main;
+
+import java.util.Scanner;
+
+import models.User;
+import services.BookService;
+import services.BorrowService;
+import services.UserService;
+import utils.Initializer;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		UserService userService = new UserService();
+		BookService bookService = new BookService();
+		BorrowService borrowService = new BorrowService();
+		
+		Initializer.setupDefaults(userService, bookService);
+
+		System.out.println("=== Welcome to Library Management System ===");
+		System.out.print("Enter your User ID: ");
+		String userId = scanner.nextLine();
+
+		User user = userService.getUserById(userId);
+
+		if (user == null) {
+			System.out.println("User not found. Exiting...");
+			return;
+		}
+
+		System.out.println("Welcome, " + user.getName() + " (" + user.getRole() + ")");
+
+		// Admin menu
+		if (user.getRole().equalsIgnoreCase("admin")) {
+			while (true) {
+				System.out.println("\n--- Admin Menu ---");
+				System.out.println("1. Add Book");
+				System.out.println("2. View All Books");
+				System.out.println("3. Add User");
+				System.out.println("4. View All Users");
+				System.out.println("5. Logout");
+				System.out.print("Enter choice: ");
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+
+				switch (choice) {
+				case 1 -> {
+					System.out.print("Enter Book ID: ");
+					String id = scanner.nextLine();
+					System.out.print("Enter Title: ");
+					String title = scanner.nextLine();
+					System.out.print("Enter Author: ");
+					String author = scanner.nextLine();
+					bookService.addBook(id, title, author);
+				}
+				case 2 -> borrowService.viewAllBooks();
+				case 3 -> {
+					System.out.print("Enter User ID: ");
+					String newId = scanner.nextLine();
+					System.out.print("Enter Name: ");
+					String name = scanner.nextLine();
+					System.out.print("Enter Role (Admin/Student): ");
+					String role = scanner.nextLine();
+					userService.addUser(newId, name, role);
+				}
+				case 4 -> userService.printAllUsers();
+				case 5 -> {
+					System.out.println("Logging out...");
+					return;
+				}
+				default -> System.out.println("Invalid choice.");
+				}
+			}
+		}
+
+		// Student menu
+		else if (user.getRole().equalsIgnoreCase("student")) {
+			while (true) {
+				System.out.println("\n--- Student Menu ---");
+				System.out.println("1. View All Books");
+				System.out.println("2. Borrow a Book");
+				System.out.println("3. Return a Book");
+				System.out.println("4. Logout");
+				System.out.print("Enter choice: ");
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+
+				switch (choice) {
+				case 1 -> borrowService.viewAllBooks();
+				case 2 -> {
+					System.out.print("Enter Book ID to borrow: ");
+					String bookId = scanner.nextLine();
+					borrowService.borrowBook(bookId, user);
+				}
+				case 3 -> {
+					System.out.print("Enter Book ID to return: ");
+					String bookId = scanner.nextLine();
+					borrowService.returnBook(bookId, user);
+				}
+				case 4 -> {
+					System.out.println("Logging out...");
+					return;
+				}
+				default -> System.out.println("Invalid choice.");
+				}
+			}
+		} else {
+			System.out.println("Unknown role. Exiting...");
+		}
+	}
+}
