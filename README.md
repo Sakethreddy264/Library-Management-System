@@ -28,15 +28,25 @@ A simple, modular, console-based **Library Management System** built using **pur
 
 LibraryManagementSystem/
 ├── src/
-│ ├── main/
-│ │ └── Main.java # Entry point
-│ ├── models/ # Data models: User, Book, Admin, Student
-│ ├── services/ # Core logic for books, users, borrowing
-│ └── utils/ # File handling, validation, setup
-├── data/
-│ ├── books.csv # Stores book records
-│ └── users.csv # Stores user records
----
+│   ├── main/
+│   │   └── Main.java                 # Entry point of the application
+│   ├── models/                       # Core domain classes
+│   │   ├── User.java                 # Abstract class for Admin and Student
+│   │   ├── Admin.java                # Admin class (inherits User)
+│   │   ├── Student.java              # Student class (inherits User)
+│   │   └── Book.java                 # Book entity
+│   ├── services/                     # Business logic layer
+│   │   ├── BookService.java          # Handles adding/viewing books
+│   │   ├── UserService.java          # Manages user authentication and CRUD
+│   │   └── BorrowService.java        # Handles book borrowing and returning
+│   └── utils/                        # Utility/helper classes
+│       ├── FileUtil.java             # File read/write helpers
+│       ├── InputValidator.java       # Input format validation
+│       └── Initializer.java          # Sets up default users/books
+│
+├── data/                             # Persistent data storage
+│   ├── books.csv                     # CSV file storing book records
+│   └── users.csv                     # CSV file storing user records
 
 ## 🛠️ Tech Stack
 
