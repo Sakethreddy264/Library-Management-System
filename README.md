@@ -48,6 +48,8 @@ LibraryManagementSystem/
 │   ├── books.csv                     # CSV file storing book records
 │   └── users.csv                     # CSV file storing user records
 
+📄 **Refer [SYSTEM_DESIGN.md] for detailed architecture and class-level understanding.**
+
 ## 🛠️ Tech Stack
 
 - **Language:** Java (JDK 8+)
